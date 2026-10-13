@@ -16,7 +16,9 @@
     "docs/",
     "tests/",
     "cordis.patch.yml",
-    "README.md"
+    "README.md",
+    "skills/",
+    "codex-skills/"
   ],
   "license": "MIT",
   "dsh": {

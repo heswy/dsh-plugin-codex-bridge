@@ -1,0 +1,4 @@
+interface:
+  display_name: "codex2dsh"
+  short_description: "创建 DSH 工作区与会话、投递任务，并明确绑定主管回信目标"
+  default_prompt: "使用 $codex2dsh 按授权创建或复用 DSH 工作区与会话，投递任务并核对回执及主管交回目标。"

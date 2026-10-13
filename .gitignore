@@ -1,7 +1,18 @@
+# 构建 / 运行产物
 node_modules/
-.DS_Store
-*.log
 __pycache__/
-*.pyc
+*.py[cod]
+
+# 编辑器与系统
+.DS_Store
 .idea/
 .vscode/
+
+# 本地凭据与运行状态（skill 脚本可能写出这些）
+.env
+.env.*
+*.log
+*.lock
+auth-url.txt
+ledger.json
+*-state.json

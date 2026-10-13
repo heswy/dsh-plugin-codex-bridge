@@ -4,11 +4,30 @@
 
 - **进来** —— 外部驱动（Codex 等）经本地 RPC 驱动独立 DSH 宿主建好的**工作区**，会同步进你正在运行的桌面窗口：点侧栏底部的刷新按钮就能看到，不用重启。
 - **投递** —— 外部进程把 JSON 写进 `~/.dsh/inbox/`，由**会话锁的持有者**（桌面进程）用 `sessionController.prompt` 代为投进目标会话，绕开 `session/writer-held`，但不改变写锁语义。
-- **交回** —— DSH 开发会话完成并推送后，用配套 skill `dsh2codex`（装在 `~/.dsh/skills/`，说明见 [docs/codex-handoff.md](docs/codex-handoff.md)）经 `codex queue` 把交接通知发回主管 Codex 对话。
+- **交回** —— DSH 开发会话完成并推送后，用配套 skill [`skills/dsh2codex/`](skills/dsh2codex/) 经 `codex queue` 把交接通知恰好一次地发回主管 Codex 对话（协议见 [docs/codex-handoff.md](docs/codex-handoff.md)）。
 
 **安装**：设置 → 插件 → 添加插件，填仓库地址 / 包名 / 本地目录都行。装完自验三件事——
 插件页出现 `dsh-plugin-codex-bridge`；侧栏底部（设置旁）出现刷新图标；`~/.dsh/inbox/sessions.json` 每隔约 10 秒刷新。
 本包**零 npm 依赖**（只用 `node:` 内置模块与 Host 服务），本地目录安装是秒级、离线可成。详见下方[安装](#安装)。
+
+## 仓库结构
+
+| 路径 | 是什么 | 装到哪 |
+|---|---|---|
+| 仓库根 | DSH 插件：工作区同步 + 文件投递箱（反向通道） | 设置 → 插件 → 添加插件 |
+| [`skills/dsh2codex/`](skills/dsh2codex/) | DSH 侧 skill：开发完成后交回主管 Codex（正向通道） | `~/.dsh/skills/dsh2codex/` |
+| [`codex-skills/codex2dsh/`](codex-skills/codex2dsh/) | Codex 侧 skill：向 DSH 派活、回意见、建工作区 | `~/.codex/skills/codex2dsh/` |
+| [`docs/`](docs/) | 交接协议、给 Codex 的说明 | — |
+| [`tests/`](tests/) | 插件测试 34 条（`node tests/harness.mjs` 等） | — |
+
+两个 skill 各自带自己的许可证与署名，可独立分发：
+
+```sh
+cp -R skills/dsh2codex         ~/.dsh/skills/
+cp -R codex-skills/codex2dsh   ~/.codex/skills/
+```
+
+> 只装插件也能用「工作区同步 + 由 Codex 投递消息给你」；**双向**协作才需要两个 skill 都在位。
 
 ---
 
@@ -213,3 +232,7 @@ node tests/dry-run.mjs    # 只读预演：对这台机器现在会新增哪些�
   `inbox/` 里，等下一次挂载时投递（不会丢，也不会重复——`id` 幂等）。
 - **投递是文件轮询，不是 RPC**：默认约 1 秒延迟。
 - **宿主半代码改动需要重启一次**才会加载；装这一版（含投递箱）需要重启一次桌面。
+
+## License
+
+MIT，署名 heswy —— 见 [LICENSE](LICENSE)。仓库内两个 skill 各自带同文许可证（`skills/dsh2codex/LICENSE`、`codex-skills/codex2dsh/LICENSE`）。

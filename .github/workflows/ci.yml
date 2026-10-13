@@ -1,0 +1,55 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  plugin:
+    name: plugin (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 语法检查
+        run: |
+          node --check lib/index.js
+          node --check lib/inbox.js
+          node --check lib/client.js
+          node --check tools/send.mjs
+
+      - name: 工作区对账与删除记忆（17 条）
+        run: node tests/harness.mjs
+
+      - name: 投递箱（12 条）
+        run: node tests/inbox.mjs
+
+      - name: 端到端：真发送端 CLI ↔ 真投递箱（5 条）
+        run: node tests/relay-e2e.mjs
+
+  skills:
+    name: skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: dsh2codex —— 交回通知（31 项离线测试）
+        run: python3 skills/dsh2codex/tests/test_notify.py
+
+      - name: codex2dsh —— 模拟宿主离线测试
+        run: python3 codex-skills/codex2dsh/scripts/test_new_task.py

@@ -9,7 +9,7 @@
 
 [![ci](https://github.com/heswy/dsh-plugin-codex-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/heswy/dsh-plugin-codex-bridge/actions/workflows/ci.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-3DA639?style=flat-square)](LICENSE)
-[![tests: 65 assertions](https://img.shields.io/badge/tests-65%20assertions-brightgreen?style=flat-square)](#测试与-ci)
+[![tests: 65 assertions](https://img.shields.io/badge/tests-66%20assertions-brightgreen?style=flat-square)](#测试与-ci)
 [![dependencies: 0](https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square)](#兼容性)
 [![DSH: 0.2.0-rc.2](https://img.shields.io/badge/DSH-0.2.0--rc.2-4B6EF5?style=flat-square)](#兼容性)
 [![python: 3.8+ / 3.10+](https://img.shields.io/badge/python-3.8%2B%20%7C%203.10%2B-3776AB?style=flat-square)](#兼容性)
@@ -217,7 +217,7 @@ node tests/inbox.mjs          # 12 条：投递箱（steer 拒绝、并发取件
 node tests/relay-e2e.mjs      #  5 条：真发送端 CLI ↔ 真投递箱
 node tests/dry-run.mjs        # 只读预演：本机现在会新增哪些工作区
 
-python3 skills/dsh2codex/tests/test_notify.py              # 31 项，完全离线
+python3 skills/dsh2codex/tests/test_notify.py              # 32 项，完全离线
 python3 codex-skills/codex2dsh/scripts/test_new_task.py    # 模拟宿主，不碰真会话
 ```
 
@@ -230,7 +230,7 @@ skill 测试用假 CLI + `git ls-remote` shim。CI 在 **Linux 与 macOS** 双�
 | 组件 | 要求 | 验证状态 |
 |---|---|---|
 | 插件 | DSH `0.2.0-rc.2`；Node 20+；**零 npm 依赖** | macOS 实测；Linux 由 CI 覆盖 |
-| `skills/dsh2codex` | Python 3.8+、`git`、能 `queue` 的 Codex CLI | 31 项离线测试 + 真机 `--probe` |
+| `skills/dsh2codex` | Python 3.8+、`git`、能 `queue` 的 Codex CLI | 32 项离线测试 + 真机 `--probe` |
 | `codex-skills/codex2dsh` | Python 3.10+、DSH CLI/宿主 | 自带模拟宿主测试 |
 | 平台 | macOS（实测）、Linux（CI）；**Windows 未验证** | — |
 | 代码托管 | 交回校验与 PR 匹配只支持 `github.com` | — |

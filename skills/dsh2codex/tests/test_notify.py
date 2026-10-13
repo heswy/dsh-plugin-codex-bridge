@@ -113,8 +113,12 @@ class Sandbox:
             'CODEX_STUB_LOG': str(self.log),
             'FAKE_LSREMOTE': '',
         })
-        self.base_env.pop('DSH2CODEX_BIN', None)
+        # 结构性密闭：发送一律走沙箱内的 stub。少了这一条，PATH 回退可能落到机器上
+        # 真实的 Codex CLI，把测试通知真的发进别人的对话——这个坑我们踩过一次。
+        self.base_env['DSH2CODEX_BIN'] = str(self.codex)
         self.base_env.pop('CODEX_BIN', None)
+        # 只读探测用的环境：显式清空强制指定，才测得到 PATH 发现逻辑。
+        self.discovery_env = {**self.base_env, 'DSH2CODEX_BIN': ''}
         self.publish()
 
     # -- helpers ---------------------------------------------------------------
@@ -154,7 +158,7 @@ def main():
     section('探测与预演（不发通知）')
     box = Sandbox()
     try:
-        result = box.run(argv=[sys.executable, str(NOTIFY), '--probe'])
+        result = box.run(argv=[sys.executable, str(NOTIFY), '--probe'], env=box.discovery_env)
         probe = json.loads(result.stdout) if result.returncode == 0 else {}
         check('--probe 不需要其他参数即可运行', result.returncode == 0, result.stderr.strip())
         check('--probe 经 PATH 找到 Codex CLI', probe.get('cli') == str(box.codex), probe)
@@ -193,6 +197,9 @@ def main():
         check('新 head 可以再次交回',
               result.returncode == 0 and json.loads(result.stdout)['status'] == 'queued', result.stdout)
         check('新 head 是新事件（账本两条）', len(box.ledger_data()) == 2, list(box.ledger_data()))
+        offenders = [r.get('cli') for r in box.ledger_data().values()
+                     if not str(r.get('cli', '')).startswith(str(box.dir))]
+        check('所有发送都指向沙箱内的 stub（绝不碰真实 CLI）', offenders == [], offenders)
 
         # -- 前置校验 ----------------------------------------------------------
         section('前置校验（都在发通知之前拦下）')
@@ -258,9 +265,14 @@ def main():
         box.git('commit', '-q', '--allow-empty', '-m', 'empty3')
         box.head = box.git('rev-parse', 'HEAD')
         box.publish()
-        result = box.run(env={'PATH': str(box.bad_bin) + os.pathsep + box.base_env['PATH']})
+        # 只读探测断言发现逻辑：PATH 上第一个 codex 不支持 queue 时必须继续找下一个。
+        # 用 --probe（不发送），这样即使断言失败也不会惊动任何真实 CLI。
+        result = box.run(argv=[sys.executable, str(NOTIFY), '--probe'],
+                         env={**box.discovery_env,
+                              'PATH': str(box.bad_bin) + os.pathsep + box.discovery_env['PATH']})
+        probe = json.loads(result.stdout) if result.returncode == 0 else {}
         check('PATH 上第一个 codex 不支持 queue 时会继续找下一个',
-              result.returncode == 0 and json.loads(result.stdout)['status'] == 'queued', result.stdout + result.stderr)
+              probe.get('cli') == str(box.codex), probe or result.stderr.strip())
 
         box.git('commit', '-q', '--allow-empty', '-m', 'empty4')
         box.head = box.git('rev-parse', 'HEAD')

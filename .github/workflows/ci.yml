@@ -48,7 +48,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: dsh2codex —— 交回通知（31 项离线测试）
+      - name: dsh2codex —— 交回通知（32 项离线测试）
         run: python3 skills/dsh2codex/tests/test_notify.py
 
       - name: codex2dsh —— 模拟宿主离线测试

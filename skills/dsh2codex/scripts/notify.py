@@ -51,6 +51,26 @@ CHATGPT_APP_CLI = 'Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/code
 
 # --------------------------------------------------------------------------- CLI discovery
 
+def which_all(command: str):
+    """Every executable match on PATH, in PATH order.
+
+    `shutil.which` returns only the FIRST match, and that is not enough here: a wrapper
+    or shim earlier on PATH must not hide a working CLI later on it.
+    """
+    seen = set()
+    found = []
+    for entry in os.environ.get('PATH', '').split(os.pathsep):
+        if not entry:
+            continue
+        candidate = os.path.join(entry, command)
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+            found.append(candidate)
+    return found
+
+
 def cli_candidates(explicit: str | None):
     """Ordered (source, path) candidates. An explicit path is the only candidate."""
     if explicit:
@@ -60,8 +80,7 @@ def cli_candidates(explicit: str | None):
         value = os.environ.get(name)
         if value:
             candidates.append((name, value))
-    on_path = shutil.which('codex')
-    if on_path:
+    for on_path in which_all('codex'):
         candidates.append(('PATH', on_path))
     for label, base in (('/Applications', '/Applications/ChatGPT.app'),
                         ('~/Applications', str(Path.home() / 'Applications/ChatGPT.app'))):

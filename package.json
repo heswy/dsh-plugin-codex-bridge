@@ -1,0 +1,40 @@
+{
+  "name": "dsh-plugin-codex-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "把别的 DSH 进程注册的工作区同步进正在运行的桌面窗口，并提供一个文件投递箱，让外部驱动（Codex 等）向桌面持有的会话投递消息：不需要重启，不抢会话写锁。",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/",
+    "tools/",
+    "docs/",
+    "tests/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "dsh",
+    "workspace",
+    "relay",
+    "handoff",
+    "codex"
+  ]
+}

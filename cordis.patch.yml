@@ -1,0 +1,31 @@
+# dsh-plugin-codex-bridge — bundle layer.
+#
+# Installed by adding this package to a profile (`dsh.profile.bundles`), which is
+# what Settings → Plugins → Add plugin does for a package name, a GitHub repo URL
+# or a local directory path.
+#
+# Per-machine overrides go in the PROFILE's own `cordis.patch.yml`, which applies
+# after every bundle layer, e.g.:
+#   - id: workspace-sync
+#     config:
+#       intervalMs: 15000
+- insert:
+    - id: workspace-sync
+      name: 'dsh-plugin-codex-bridge'
+      config:
+        autoSync: true
+        intervalMs: 5000
+        # OFF on purpose. Deleting a workspace keeps its folder AND its session
+        # history, so inferring workspaces from session directories would
+        # re-register what the user just removed.
+        includeUngroupedSessions: false
+        attachSessions: true
+        # Never register harness-internal directories (the bot workspace, caches).
+        excludeDshHome: true
+        maxAddsPerPass: 20
+        inbox:
+          enabled: true
+          intervalMs: 1000
+          # `steer` interjects into a running turn; refused unless opted in.
+          allowSteer: false
+          deliveryTimeoutMs: 30000

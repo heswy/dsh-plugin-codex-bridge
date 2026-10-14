@@ -210,6 +210,7 @@ python3 skills/dsh2codex/scripts/notify.py \
 | [Codex 接入说明](docs/FOR-CODEX.md) | 会话发现、消息投递与协作入口。 |
 | [投递箱协议](docs/codex-handoff.md) | 请求字段、结果文件、回执语义与处理规则。 |
 | [内部机制](docs/internals.md) | 工作区对账、删除记忆、会话锁与实测依据。 |
+| [更新日志](CHANGELOG.md) | 版本记录、修复项与已知边界。 |
 | [`codex2dsh`](codex-skills/codex2dsh/README.md) | Codex 侧任务派发与审查反馈。 |
 | [`dsh2codex`](skills/dsh2codex/README.md) | DSH 侧交回通知与状态处理。 |
 

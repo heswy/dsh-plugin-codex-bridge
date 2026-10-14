@@ -39,5 +39,7 @@
 - 插件依赖 DSH 内部服务契约，运行时 `doctor` 检查并报告漂移；没有版本闸门，不代表兼容所有 DSH 版本。
 - 已用 DSH `0.2.0-rc.2` 与 Node.js 20+ 验证；完整双向协作另需 Python 3.10+、Git，以及支持 `queue --thread --message` 的 Codex CLI。
 
+<!-- 下面两条链接指向 v0.1.0 tag：在 tag 推送前它们会解析到 404（悬空链接），发版推送 tag 后自动生效，届时无需改动。 -->
+
 [Unreleased]: https://github.com/heswy/dsh-plugin-codex-bridge/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/heswy/dsh-plugin-codex-bridge/releases/tag/v0.1.0

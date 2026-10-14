@@ -210,6 +210,7 @@ The deeper guides below are currently primarily in Chinese. This README provides
 | [Codex integration](docs/FOR-CODEX.md) | Session discovery, message delivery, and integration entry points. |
 | [Inbox protocol](docs/codex-handoff.md) | Request fields, result files, receipt semantics, and handling rules. |
 | [Internals](docs/internals.md) | Workspace reconciliation, deletion memory, session locks, and documented observations. |
+| [Changelog](CHANGELOG.md) | Version history, fixes, and known boundaries. |
 | [`codex2dsh`](codex-skills/codex2dsh/README.md) | Task dispatch and review feedback from Codex. |
 | [`dsh2codex`](skills/dsh2codex/README.md) | Handoff notifications and outcome handling from DSH. |
 

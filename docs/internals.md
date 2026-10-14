@@ -67,6 +67,20 @@ DSH 删除工作区时**不动文件夹、不动会话历史**——被删掉的
 | `Cannot read properties of undefined (reading 'throwIfAborted')` | `sessionController.prompt` 第一行就调用 `signal.throwIfAborted()`，传 `undefined` 直接抛 | 永远传真实 `AbortController` 的 signal |
 | 投递 promise 永不 settle | 中止 signal **不会**让一个不 resolve 的 promise settle | `Promise.race([prompt, deadline])`，超时记 `delivery-timeout` |
 
+## 改客户端半时务必原子写入
+
+实测教训（2026-10-14）：`lib/client.js` 是被宿主**实时 serve 给浏览器**的脚本。用普通
+"覆盖式写入"改它时，如果页面恰好在写入的瞬间重载（例如刷新按钮触发了视图重载），
+浏览器会取到**半个文件**，于是：
+
+```
+Error: web boot: 1 entry did not activate
+dsh-plugin-codex-bridge: import failed: bundle script …&rev=… failed to load
+```
+
+应用会因此重启。安全的做法：**写临时文件再 `rename`**（同目录、原子替换），或在编辑
+期间确保没有页面会重载。宿主半（`lib/index.js`）没有这个问题（改完需要重挂才生效）。
+
 ## 刻意不做的事
 
 - 不抢锁、不改写锁语义、不替别的宿主写会话日志；

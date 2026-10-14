@@ -20,6 +20,8 @@
         # re-register what the user just removed.
         includeUngroupedSessions: false
         attachSessions: true
+        # 对账确有变化时，客户端半会重载视图（会话目录按连接拉取，外部新会话不会推送）
+        clientRefresh: true
         # Never register harness-internal directories (the bot workspace, caches).
         excludeDshHome: true
         maxAddsPerPass: 20

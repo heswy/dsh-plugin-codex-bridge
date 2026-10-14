@@ -312,6 +312,26 @@ try {
     assert.equal((await readStatus(mounted)).lastRun.attached.length, 0)
   })
 
+  await test('adopts a session that appeared later in an already-populated workspace', async () => {
+    const target = dir('attach-later')
+    const mounted = mount({
+      live: [{ path: target, sessionIds: ['session-old'] }],
+      sessionCwds: [{ cwd: target, id: 'session-old' }, { cwd: target, id: 'session-new' }],
+    })
+    await settle(() => mounted.attached.length === 1, 'adopt the later session')
+    assert.deepEqual(mounted.attached.map((entry) => entry.sessionId), ['session-new'])
+    const status = await readStatus(mounted)
+    assert.equal(status.lastRun.attached.length, 1)
+    assert.equal(status.lastRun.attachFailed.length, 0)
+
+    // Idempotent: the member the record already had is never re-attached, so a second
+    // pass finds nothing to do (this is the case that used to stay invisible: a new
+    // conversation in a workspace that already owned one).
+    const response = await mounted.getHandle()(new Request('http://127.0.0.1/api/workspace-sync?action=sync', { method: 'POST' }))
+    assert.equal(response.status, 200)
+    assert.equal(mounted.attached.length, 1)
+  })
+
   await test('a rejected attach is recorded without failing the pass', async () => {
     const target = dir('attach-rejected')
     const mounted = mount({ sessionCwds: [{ cwd: target, id: 'session-ghost' }], config: { attachSessions: true, includeUngroupedSessions: true } })

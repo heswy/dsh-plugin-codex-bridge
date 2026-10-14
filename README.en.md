@@ -151,7 +151,7 @@ Default intervals are 5 seconds for workspace reconciliation and 1 second for in
 | `intervalMs` | `5000` | Reconciliation interval, 1000–600000 ms. |
 | `includeUngroupedSessions` | `false` | Infer workspaces from session directories; off by default to avoid restoring deleted workspaces. |
 | `attachSessions` | `true` | Account sessions whose cwd falls inside a workspace, populated ones included (idempotent; the registry re-validates `header.cwd`). |
-| `clientRefresh` | `true` | Let the client half reload this view when a pass actually changed something — the session catalog is pulled once per connection, so external sessions never arrive by push. |
+| `clientRefresh` | `true` | Whether a click reloads this view (the session catalog is pulled once per connection, so external sessions never arrive by push): `true` always, `'on-change'` only when the pass changed something, `false` off. |
 | `excludeDshHome` | `true` | Exclude candidate workspaces inside the DSH data directory. |
 | `maxAddsPerPass` | `20` | Maximum additions per pass, 1–200. |
 | `verbose` | `false` | Log every reconciliation pass. |

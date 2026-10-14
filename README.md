@@ -151,7 +151,7 @@ python3 skills/dsh2codex/scripts/notify.py \
 | `intervalMs` | `5000` | 同步周期，1000–600000 毫秒。 |
 | `includeUngroupedSessions` | `false` | 从会话目录推断工作区；默认关闭，避免恢复已删除的工作区。 |
 | `attachSessions` | `true` | 把 cwd 落在某工作区里的会话记到该工作区名下（含已有成员的，幂等；注册表自己会复核 cwd） |
-| `clientRefresh` | `true` | 对账确有变化时让客户端半重载视图——会话目录按连接拉取，外部新会话不会推送 |
+| `clientRefresh` | `true` | 点击刷新后是否重载视图（会话目录按连接拉取，外部新会话不会推送）。`true` 每次都重载、`'on-change'` 只在对账确有变化时、`false` 关闭 |
 | `excludeDshHome` | `true` | 排除 DSH 数据目录内的候选工作区。 |
 | `maxAddsPerPass` | `20` | 每轮新增上限，1–200。 |
 | `verbose` | `false` | 每轮记录日志。 |
